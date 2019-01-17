@@ -23,7 +23,12 @@ namespace GameB {
         void draw() const;
         void tick(int time);
         void virtual move(int time){}
+        
         ~MobileSprite();
+        
+        void setXspeed(double speed){xSpeed = speed;}
+        void setYspeed(double speed){ySpeed = speed;}
+
         
     protected:
          MobileSprite(int x, int y,const std::string& filePath);
@@ -34,6 +39,8 @@ namespace GameB {
         SDL_Texture* texture= nullptr;
         void makeTexture(const std::string& filePath);
         void gravityMove();
+        
+        double xSpeed, ySpeed;
     };
     
 }
