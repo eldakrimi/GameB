@@ -40,7 +40,6 @@ namespace GameB{
         for (std::vector<Sprite*>::iterator i =  changeLevelVector.begin(); i !=  changeLevelVector.end(); ){
             if (*i == s) {
                 i =  changeLevelVector.erase(i);
-                cout << "removed from ChangeLevelVector" << endl;
             }
             else  i++;}
     }
@@ -52,7 +51,7 @@ namespace GameB{
         }
     }
     
-    //förbjud kopiering/tilldelning?
+
     
     
     

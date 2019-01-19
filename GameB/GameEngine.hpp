@@ -34,11 +34,16 @@ namespace GameB {
         static void installFreeFunction(SDL_Keycode keycode, void(*function_ptr)());
         static void installMemberFunction(SDL_Keycode keycode, std::function<void()> func);
         static void addLevel(Level* l);
+        static void setLoseGame();
+        
+        static bool getFinaltextStatus();
         
     private:
         static GameEngine* instance;
         bool quit;
         bool finalTextNotSet;
+        bool gameLost;
+        bool textBoxExist;
         int fps;
         Level* currentLevel;
         EnterTextSprite* textBox;
@@ -50,6 +55,8 @@ namespace GameB {
         
         std::unordered_map<SDL_Keycode, std::function<void()>> freeFunctionsMap;
         std::unordered_map<SDL_Keycode, std::function<void()>> memberFunctionAndObjectBindningMap;
+        
+
         
         //hjälpmetoder
         void runGameLoop();
@@ -64,8 +71,6 @@ namespace GameB {
         void checkForLevelChange();
         void textInputStart();
         void removeFromRemovedVector();
-      
-    
     };
     
     

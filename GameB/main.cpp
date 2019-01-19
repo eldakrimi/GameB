@@ -17,7 +17,6 @@
 using namespace std;
 using namespace GameB;
 
-//vill jag skapa från getInstance eller som subklass?
 class Background : public StaticSprite {
 public: Background(int x, int y,int w, int h, string image):StaticSprite(x,y,w,h,image){
     
@@ -31,7 +30,7 @@ public: Player(int x, int y,string image):MobileSprite(x,y,image){
 
     void moveDown(){
         if(getY()<(gameSys.getHeight()-Sprite::getDrect().h))
-        setY(getY()+5);
+            setY(getY()+5);
     }
     
     void moveUp(){
@@ -39,7 +38,7 @@ public: Player(int x, int y,string image):MobileSprite(x,y,image){
             setY(getY()-5);
     }
     void collisionAction(){
-        Sprite::setAliveStatus(false);
+        GameEngine::setLoseGame();
     }
     
     void handleCommand(SDL_Event& event){
@@ -51,7 +50,7 @@ public: Player(int x, int y,string image):MobileSprite(x,y,image){
                 moveUp();
                 break;
             case SDLK_SPACE:
-                Bullet* bullet = new Bullet(getX()+30, getY(),"shot.png");
+                Bullet* bullet = new Bullet(getX()+40, getY(),"shot.png");
                 GameEngine::addSprite(bullet);
                 break;
         }
@@ -62,11 +61,12 @@ public: Player(int x, int y,string image):MobileSprite(x,y,image){
     class Bullet : public MobileSprite{
     public: Bullet(int x, int y,string image):MobileSprite(x,y,image){
         makeCollideble();
-    }
-    void move(int time){
-        setX(getX()+1*time*0.3);
-    }
+        setAffectedByGravity(true);
+        setPower(30);
+        setXspeed(0.1);
+        setYspeed(-0.2);
         
+    }
         
     void handleOutsideScreen(){
         GameEngine::removeSprite(this);
@@ -76,14 +76,15 @@ public: Player(int x, int y,string image):MobileSprite(x,y,image){
 
 
 
-class AnimatedEnemy: public  AnimatedSprite{
+class AnimatedEnemy: public AnimatedSprite{
 public: AnimatedEnemy(int x, int y,int rowsInSpriteSheet, int columnsInSpriteSheet, string image):AnimatedSprite(x,y,rowsInSpriteSheet,columnsInSpriteSheet, image){
+     
 }
     
 
     void move(int time){
         startAnimation();
-        setX(getX()+1*time*0.2);
+        setX(getX()+1*time*0.1);
     }
     
     void handleOutsideScreen(){
@@ -99,6 +100,9 @@ public: AnimatedEnemy(int x, int y,int rowsInSpriteSheet, int columnsInSpriteShe
 class Enemy: public MobileSprite {
     public: Enemy(int x, int y,string image):MobileSprite(x,y,image){
         makeCollideble();
+        setAffectedByGravity(false);
+        setXspeed(-0.1);
+        setYspeed(0.0);
     }
     
     void collisionAction(){
@@ -110,14 +114,10 @@ class Enemy: public MobileSprite {
         setX(500);
     }
     
-    void move(int time){
-        setX(getX()-1*time*0.1);
-    }
-    
 };
 
 class EndText: public EnterTextSprite{
-public: EndText(int x, int y,const std::string& l,const std::string& p):EnterTextSprite(x,y),lastTextToshow(l),prompt(p){
+public: EndText(int x, int y,int w, int h,const std::string& l,const std::string& p):EnterTextSprite(x,y,w,h),lastTextToshow(l),prompt(p){
      setText(lastTextToshow);
     
 }
@@ -134,6 +134,8 @@ private:
     
 };
 
+
+
 //Free functions
 void pause(){
     Mix_Pause(-1);
@@ -141,16 +143,12 @@ void pause(){
 void resume(){
     Mix_Resume(-1);
 }
-    
-    
-    
 
+    
 int main(int argc, const char * argv[]) {
     GameEngine ses = GameEngine(60);
     const int WIDTH = gameSys.getWidth();
     const int HEIGHT = gameSys.getHeight();
-    
-    
     
     //Level 1
     
@@ -185,14 +183,26 @@ int main(int argc, const char * argv[]) {
     levelTwo->addSpriteToChangeLevelVector(enemyThree);
     
     //Level 3
-    Level* levelThree = Level::createLevel("Third");
+    Level* levelWin = Level::createLevel("Third");
     
-    Background* endBackground = new Background(0,0,WIDTH,HEIGHT,"farsta1.bmp");
-    levelThree->addSpriteToLevel(endBackground);
+    Background* winBackground = new Background(0,0,WIDTH,HEIGHT,"farsta1.bmp");
+    levelWin->addSpriteToLevel(winBackground);
     
-    EndText* box= new EndText(100,150,"Type your name", "! You are great");
-    levelThree ->addSpriteToLevel(box);
-    levelThree ->addSpriteToChangeLevelVector(box);
+    EndText* winBox= new EndText(100,150,470, 100,"Type your name", "! You are great!");
+    levelWin ->addSpriteToLevel(winBox);
+    levelWin ->addSpriteToChangeLevelVector(winBox);
+    
+    
+    //Level 4
+    Level* levelLost = Level::createLevel("Third");
+    Background* loseBackground = new Background(0,0,WIDTH,HEIGHT,"farsta1.bmp");
+    levelLost ->addSpriteToLevel(loseBackground);
+
+    EndText* loseBox= new EndText(100,150,470,100,"Type your name", "! You're a loser");
+    levelLost ->addSpriteToLevel(loseBox);
+    levelLost ->addSpriteToChangeLevelVector(loseBox);
+    
+
     
     
     GameEngine::installFreeFunction(SDLK_p, pause);
@@ -201,10 +211,6 @@ int main(int argc, const char * argv[]) {
     auto binding = bind(&AnimatedEnemy::restartBee, aniEmy);
     GameEngine::installMemberFunction(SDLK_f, binding);
     
-
-    
-    
- 
 
 
     GameEngine::startGameLoop();

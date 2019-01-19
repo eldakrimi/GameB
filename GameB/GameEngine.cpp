@@ -19,7 +19,6 @@ namespace GameB {
     //Konstruktorer och destruktorer
     GameEngine::GameEngine(int chosenFps){
         
-        //kontrollera
         fps = (chosenFps < 0) ? 60 : chosenFps;
         instance = this;
     }
@@ -40,6 +39,7 @@ namespace GameB {
     
     //Statiska metoder som spelprogrammeraren når
     void GameEngine::startGameLoop(){
+        instance->gameLost=false;
         instance->loadNewLevel(0);
         instance->runGameLoop();
     }
@@ -60,6 +60,13 @@ namespace GameB {
     void GameEngine::addLevel(Level *l){
         instance->levels.push_back(l);
     }
+    void GameEngine::setLoseGame(){
+        instance->gameLost=true;
+    }
+    
+    bool GameEngine::getFinaltextStatus(){
+        return instance->finalTextNotSet;
+    }
     
     
     //Privata metoder:
@@ -67,6 +74,7 @@ namespace GameB {
         quit = false;
         finalTextNotSet =true;
         bool isInputText =false;
+        textBoxExist = false;
                 
         Uint32 lastTick = SDL_GetTicks();
         Uint32 nextTick;
@@ -92,7 +100,6 @@ namespace GameB {
             removeFromRemovedVector();
             
             
-            //kolla om inputtext finns - kanske egen metod
             for (int i =0;i<sprites.size(); i++){
                 
                 if(finalTextNotSet){
@@ -100,10 +107,8 @@ namespace GameB {
                         textBox=e;
                         if(isInputText){
                             memberFunctionAndObjectBindningMap.clear();
-                            freeFunctionsMap.clear();
                             textInputStart();
                             finalTextNotSet =false;
-                          
                             
                         }else{
                             isInputText =true;
@@ -129,8 +134,6 @@ namespace GameB {
     }
     
     void GameEngine::removeFromRemovedVector(){
-
-        
         for (Sprite* s : removed) {
 
             for (std::vector<Sprite*>::iterator i = sprites.begin(); i != sprites.end(); ){
@@ -159,10 +162,14 @@ namespace GameB {
             }
             removeFromRemovedVector();
             
-            long pos = find(levels.begin(), levels.end(), currentLevel) - levels.begin();
-            currentLevel = levels[pos+1];
+            if(gameLost){
+                currentLevel = levels[levels.size()-1];
+            }else{
+                long pos = find(levels.begin(), levels.end(), currentLevel) - levels.begin();
+                currentLevel = levels[pos+1];
+            }
+            
             currentLevel->loadLevel();
-         
         }
         
     }
@@ -258,6 +265,7 @@ namespace GameB {
                             textInputDone = true;
                         }
                         break;
+                  
                     case SDL_TEXTINPUT:
                         textToRender.append(eve.text.text);
                         textBox->setText(textToRender);

@@ -21,14 +21,14 @@ namespace GameB{
         ~GameSystem();
         SDL_Renderer* get_ren() const;
         TTF_Font* get_font() const;
-        int getHeight() const { return HEIGHT; };// är detta värdesemantik? ska den vara final?
-        int getWidth() const { return WIDTH; };// är detta värdesemantik? ska den vara final?
+        int getHeight() const { return HEIGHT; };
+        int getWidth() const { return WIDTH; };
         
     
         
     private:
-        SDL_Window* win; //flera ska använda detta fönster
-        SDL_Renderer* ren;//flera ska använda denna renderare.
+        SDL_Window* win;
+        SDL_Renderer* ren;
         TTF_Font* font;
         const int HEIGHT = 400;
         const int WIDTH = 600;

@@ -17,15 +17,13 @@ using namespace std;
 namespace GameB {
     GameSystem::GameSystem(){
         
-        //Initierar SDL
-        SDL_Init(SDL_INIT_EVERYTHING);
+
         if( SDL_Init(SDL_INIT_EVERYTHING) < 0 )
         {
             printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
             
         }
         
-        //Skapar ett fönster
         win = SDL_CreateWindow("Game", SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0);
         if (win == NULL)
         {
@@ -34,14 +32,11 @@ namespace GameB {
         }
         
         
-        //Skapar en renderare
-        ren = SDL_CreateRenderer(win, -1, 0);//skapar en renderare kopplat till detta fönster.
+        ren = SDL_CreateRenderer(win, -1, 0);
         if (ren == NULL) {
-            // Om det inte blir ngn renderare.
             printf("Could not create renderer: %s\n", SDL_GetError());
         }
         
-        //Initierar font
         TTF_Init();
         font = TTF_OpenFont("krungthep.ttf", 36);
         if(font== NULL)
@@ -50,7 +45,6 @@ namespace GameB {
         }
         
         
-        //startar musik
         Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 4096);
         Mix_Chunk* m = Mix_LoadWAV("music.wav");
         Mix_PlayChannel(-1, m, -1);

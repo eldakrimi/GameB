@@ -13,14 +13,20 @@
 using namespace std;
 namespace GameB {
     
-    EnterTextSprite::EnterTextSprite(int x, int y):Sprite(x,y,0,0,""){
+    EnterTextSprite::EnterTextSprite(int x, int y,int w, int h):Sprite(x,y,0,0,""){
         textToRender="";
+      
         makeTexture(textToRender);
+        inputRect.x = x-10;
+        inputRect.y = y-10;
+        inputRect.w = w;
+        inputRect.h = h;
         
     }
     
-    EnterTextSprite* EnterTextSprite::createEnterTextSprite(int x, int y){
-        return new EnterTextSprite(x,y);
+    EnterTextSprite* EnterTextSprite::createEnterTextSprite(int x, int y, int w, int h){
+        return new EnterTextSprite(x,y,w,h);
+        
         
     }
     
@@ -65,6 +71,11 @@ namespace GameB {
     
     void EnterTextSprite::draw() const{
         
+        if(GameEngine::getFinaltextStatus()==true){
+            SDL_SetRenderDrawColor(gameSys.get_ren(), 0 , 0 , 0, 255);
+            SDL_RenderFillRect(gameSys.get_ren(), &inputRect);
+        }
+       
         SDL_RenderCopy(gameSys.get_ren(),texture,NULL, &getDrect());
     }
     void EnterTextSprite::tick(int time){

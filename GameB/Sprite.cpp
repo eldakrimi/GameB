@@ -10,7 +10,7 @@
 
 namespace GameB {
     
-    Sprite::Sprite(int x, int y, int w, int h,const std::string& filePath):dRect{x,y,w,h}
+    Sprite::Sprite(int x, int y, int w, int h,const std::string& filePath):dRect{x,y,w,h},startingXposition(x),startingYposition(y)
     {
         
     }
@@ -25,6 +25,7 @@ namespace GameB {
         srcRect.w= w;
         srcRect.h= h;
     }
+ 
     
     bool Sprite::hasCollided(Sprite *other){
         

@@ -16,7 +16,7 @@ namespace GameB {
     class EnterTextSprite:public Sprite{
         
     public:
-        static EnterTextSprite* createEnterTextSprite(int x, int y);
+        static EnterTextSprite* createEnterTextSprite(int x, int y, int w, int h);
         
         void draw() const;
         void tick(int time);
@@ -26,13 +26,14 @@ namespace GameB {
         
         ~EnterTextSprite();
     protected:
-        EnterTextSprite(int x, int y);
+        EnterTextSprite(int x, int y, int w, int h);
         SDL_Texture* getTexture() const {return texture;}
         void makeTexture(const std::string& filePath);
         
     private:
         SDL_Texture* texture = nullptr;
         SDL_Surface* surf = nullptr;
+        SDL_Rect  inputRect;
     
         std::string textToRender = "";
         std::string lastText="";

@@ -22,25 +22,41 @@ namespace GameB {
         static MobileSprite* getInstance(int x, int y, int w, int h,const std::string& filePath);
         void draw() const;
         void tick(int time);
-        void virtual move(int time){}
-        
+      
         ~MobileSprite();
         
         void setXspeed(double speed){xSpeed = speed;}
         void setYspeed(double speed){ySpeed = speed;}
+        
+        double getXspeed() const{return xSpeed;};
+        double getYspeed() const{return ySpeed;};
+        
+        void setPower(int p);
+        int getPower() const {return power;}
+        
+        bool isAffactedByGravity()const {return affectedByGravity;}
+        void setAffectedByGravity(bool status){affectedByGravity = status;}
 
         
     protected:
          MobileSprite(int x, int y,const std::string& filePath);
         
-        
-        
     private:
         SDL_Texture* texture= nullptr;
-        void makeTexture(const std::string& filePath);
-        void gravityMove();
+        bool affectedByGravity;
+        bool hitFloor;
+        bool turnedUpper;
+        bool turnedLower;
+        int power;
+        int startingPower;
+        double xSpeed;
+        double ySpeed;
         
-        double xSpeed, ySpeed;
+        
+        void makeTexture(const std::string& filePath);
+        void move(int time, double xSpeed, double ySpeed);
+        void gravityMove(int time, double xSpeed, double ySpeed);
+        void bounceMove(int time, double xSpeed, double ySpeed);
     };
     
 }

@@ -29,9 +29,6 @@ namespace GameB {
         SDL_Texture* texture= nullptr;
         void makeTexture(const std::string& filePath);
 
-     
-        
-        
         
     };
     

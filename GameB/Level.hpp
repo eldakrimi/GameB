@@ -26,8 +26,8 @@ namespace GameB{
         void addSpriteToLevel(Sprite* s);
         void addSpriteToChangeLevelVector(Sprite* s);
         void removeSpriteFromChangeLevelVector(Sprite* s);
-        
         void loadLevel();
+        
         bool isChangeLevelVectorEmpty(){  return changeLevelVector.empty();}
         std:: string getLevelName()const {return name;}
         bool checkLevelStatus() const {return levelFinished;}
@@ -43,9 +43,6 @@ namespace GameB{
         
         std:: string name;
         bool levelFinished;
-        
-        Level(const Level& other)= delete;
-        const Level& operator=(const Level& other)= delete;
         
     };
 }

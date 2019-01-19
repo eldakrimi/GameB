@@ -16,7 +16,7 @@ namespace GameB {
     class Sprite{
     public:
         virtual ~Sprite(){};
-        virtual void tick(int millisPassed) = 0;
+        virtual void tick(int timePassed) = 0;
         virtual void draw() const=0;
         virtual void collisionAction(){};
         virtual void handleOutsideScreen(){};
@@ -29,6 +29,11 @@ namespace GameB {
         void setY(int y) { dRect.y = y; }
         int& getX() {return  dRect.x;}
         int& getY() {return  dRect.y;}
+        
+    
+        int& getStartingXposition() {return  startingXposition;}
+        int& getStartingYposition() {return  startingYposition;}
+        
         
         const SDL_Rect& getDrect() const{return dRect;}
         const SDL_Rect& getSrect() const{return srcRect;}
@@ -44,11 +49,9 @@ namespace GameB {
     protected:
         Sprite(int x, int y, int w, int h,const std::string& filePath);
         void makeCollideble() { collideble = true; }
-        //osäker om den behövs
         void setWH(int w, int h);
         void setSrcRect(int x, int y, int w, int h);
 
-        
         SDL_Surface* getSurface() const { return surface; };
         void setSurface(SDL_Surface* s){
             surface = s;
@@ -60,15 +63,14 @@ namespace GameB {
         SDL_Rect srcRect;
         SDL_Surface* surface;
         
-        //får man initiera saker här?
         bool alive =true;
         bool collideble= false;
         bool hit=false;
+        int startingXposition;
+        int startingYposition;
         
-        //kanske inte kan vara här/publik?
         bool isPixelColored(int x, int y);
         
-        //förbjud kopiering och tilldelning
         const Sprite& operator=(const Sprite&)=delete;
         Sprite(const Sprite&)= delete;
         
